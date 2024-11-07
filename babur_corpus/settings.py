@@ -131,8 +131,11 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # A single directory for all collected static files
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),  # For additional static files not in apps
+    os.path.join(BASE_DIR, 'static'),
+    # Add the path to drf-yasg static files explicitly
+    os.path.join(BASE_DIR, 'static/drf-yasg/swagger-ui-dist'),
 ]
+
 
 
 # Default primary key field type
