@@ -25,7 +25,14 @@ SECRET_KEY = 'django-insecure-6r0(5r)txbe1$&&@!e5#i*u(*($q*&8nyh#-v=0ei8ts2a6*=c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = [
+    'https://40d9-194-93-25-162.ngrok-free.app'
+]
+CORS_ALLOWED_ORIGINS = [
+    'https://40d9-194-93-25-162.ngrok-free.app'
+]
+
+ALLOWED_HOSTS = ['*','40d9-194-93-25-162.ngrok-free.app']
 
 
 # Application definition
@@ -121,6 +128,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # or any other directory you want to store collected static files
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
