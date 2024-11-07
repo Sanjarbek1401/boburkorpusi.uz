@@ -21,19 +21,19 @@ environ.Env.read_env()
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = 'django-insecure-6r0(5r)txbe1$&&@!e5#i*u(*($q*&8nyh#-v=0ei8ts2a6*=c'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://40d9-194-93-25-162.ngrok-free.app'
-]
-CORS_ALLOWED_ORIGINS = [
-    'https://40d9-194-93-25-162.ngrok-free.app'
-]
+# CSRF_TRUSTED_ORIGINS = [
+#     'https://40d9-194-93-25-162.ngrok-free.app'
+# ]
+# CORS_ALLOWED_ORIGINS = [
+#     'https://40d9-194-93-25-162.ngrok-free.app'
+# ]
 
-ALLOWED_HOSTS = ['*','40d9-194-93-25-162.ngrok-free.app']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
