@@ -127,13 +127,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = '/static/'
+STATIC_URL = 'Bobur_corpus/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # A single directory for all collected static files
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
     # Add the path to drf-yasg static files explicitly
-    os.path.join(BASE_DIR, 'static/drf-yasg/swagger-ui-dist'),
+    os.path.join(BASE_DIR, 'static'),
 ]
 
 
