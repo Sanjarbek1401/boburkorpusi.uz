@@ -33,7 +33,7 @@ DEBUG = True
 #     'https://40d9-194-93-25-162.ngrok-free.app'
 # ]
 
-ALLOWED_HOSTS = ['.vercel.app']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
