@@ -6,3 +6,4 @@ gunicorn==23.0.0
 dj-database_url
 psycopg2-binary
 django-environ
+django-cors-headers
