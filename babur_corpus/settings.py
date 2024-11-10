@@ -27,11 +27,11 @@ DEBUG = True
 
 
 
-ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1', "http://localhost:5174"]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "http://127.0.0.1:5173",
+    "http://localhost:5174",
     "http://44.210.118.110:5173",
 ]
 CORS_ALLOW_CREDENTIALS = True
