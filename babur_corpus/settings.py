@@ -32,7 +32,7 @@ DEBUG = False
 #     'https://40d9-194-93-25-162.ngrok-free.app'
 # ]
 
-ALLOWED_HOSTS = ['*','localhost','127.0.0.1','localhost:3000']
+ALLOWED_HOSTS = ['*','localhost','127.0.0.1','localhost:3000','localhost:5173']
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
