@@ -25,33 +25,19 @@ SECRET_KEY = 'django-insecure-6r0(5r)txbe1$&&@!e5#i*u(*($q*&8nyh#-v=0ei8ts2a6*=c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-# CSRF_TRUSTED_ORIGINS = [
-#     'https://40d9-194-93-25-162.ngrok-free.app'
-# ]
-# CORS_ALLOWED_ORIGINS = [
-#     'https://40d9-194-93-25-162.ngrok-free.app'
-# ]
 
-ALLOWED_HOSTS = ['*','localhost','127.0.0.1','localhost:3000','localhost:5173']
+
+ALLOWED_HOSTS = ['*','localhost','127.0.0.1','localhost:5173']
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
+
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    # Add your production frontend URL here if any
-    "http://44.210.118.110:5173",  # Add this if your frontend will be hosted here
+    "http://44.210.118.110:5173",
 ]
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_METHODS = [
-    'DELETE',
-    'GET',
-    'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT',
-]
+
 CORS_ALLOW_HEADERS = [
     'accept',
     'accept-encoding',
