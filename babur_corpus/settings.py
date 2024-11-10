@@ -33,6 +33,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:5174",
     "http://44.210.118.110:5173",
+    "https://bobur-gilt.vercel.app/"
 ]
 CORS_ALLOW_CREDENTIALS = True
 
