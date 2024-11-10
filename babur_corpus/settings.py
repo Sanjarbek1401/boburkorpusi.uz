@@ -36,7 +36,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://bobur-gilt.vercel.app/"
 ]
 CORS_ALLOW_CREDENTIALS = True
-
+SECURE_SSL_REDIRECT = True
 CORS_ALLOW_HEADERS = '*'
 
 # Application definition
