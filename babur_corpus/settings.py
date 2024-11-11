@@ -33,11 +33,17 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://localhost:5174",
     "http://44.210.118.110:5173",
-    "https://bobur-gilt.vercel.app/"
+    "https://bobur-gilt.vercel.app",
 ]
 CORS_ALLOW_CREDENTIALS = True
 SECURE_SSL_REDIRECT = True
 CORS_ALLOW_HEADERS = '*'
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
 
 # Application definition
 
