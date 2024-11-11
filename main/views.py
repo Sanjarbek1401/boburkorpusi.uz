@@ -105,6 +105,22 @@ class DivanGroupAPIView(APIView):
         return Response(serializer.data)
 
 
+class DivanGroupDetailAPIView(APIView):
+    permission_classes = (AllowAny,)
+
+    @swagger_auto_schema(
+        operation_description="Retrieve details of a specific Divan group by ID."
+    )
+    def get(self, request, id, *args, **kwargs):
+        try:
+            group = DivanGroup.objects.get(id=id)
+        except DivanGroup.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = DivanGroupSerializer(group)
+        return Response(serializer.data)
+
+
 class DivanLittleGroupAPIView(APIView):
     permission_classes = (AllowAny,)
 
