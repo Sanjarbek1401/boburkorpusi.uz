@@ -22,6 +22,7 @@ urlpatterns = [
     path('authors/', views.AuthorInfoAPIView.as_view(), name='author-info'),
     path('baburnoma/', views.BaburnomaAPIView.as_view(), name='baburnoma'),
     path('divan-categories/', views.DivanCategoryAPIView.as_view(), name='divan-categories'),
+    path('categories/<int:id>/', views.DivanCategoryDetailAPIView.as_view(), name='divan-category-detail'),
     path('divan-groups/', views.DivanGroupAPIView.as_view(), name='divan-groups'),
     path('divan-little-groups/', views.DivanLittleGroupAPIView.as_view(), name='divan-little-groups'),
     path('divan-texts/', views.DivanTextAPIView.as_view(), name='divan-texts'),

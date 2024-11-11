@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
@@ -9,7 +8,7 @@ from .filters import DivanCategoryFilter
 from .models import *
 from .serializers import *
 from drf_yasg import openapi
-
+from rest_framework import status
 
 class AuthorInfoAPIView(APIView):
     permission_classes = (AllowAny,)
@@ -74,6 +73,26 @@ class DivanCategoryAPIView(APIView):
             'groups__little_groups__texts'
         ).distinct()
         serializer = DivanCategorySerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class DivanCategoryDetailAPIView(APIView):
+    permission_classes = (AllowAny,)
+
+    @swagger_auto_schema(
+        operation_description="Retrieve details of a specific Divan category by ID."
+    )
+    def get(self, request, id, *args, **kwargs):
+        try:
+            category = DivanCategory.objects.prefetch_related(
+                'groups',
+                'groups__little_groups',
+                'groups__little_groups__texts'
+            ).get(id=id)
+        except DivanCategory.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = DivanCategorySerializer(category)
         return Response(serializer.data)
 
 
