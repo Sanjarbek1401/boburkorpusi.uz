@@ -17,6 +17,7 @@ class Baburnoma(models.Model):
 
 class DivanCategory(models.Model):
     name = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='divan_images/', null=True, blank=True)
 
     def __str__(self):
         return self.name

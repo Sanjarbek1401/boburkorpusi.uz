@@ -196,4 +196,5 @@ SWAGGER_SETTINGS = {
     'DEFAULT_INFO': 'your_project.urls.schema_view',
 }
 
-    
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -36,7 +36,7 @@ class DivanCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DivanCategory
-        fields = ['id','name','groups']
+        fields = ['id','name','groups','image']
 
 class AdminContactSerializer(serializers.ModelSerializer):
     class Meta:

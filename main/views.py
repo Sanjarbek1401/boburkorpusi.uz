@@ -80,7 +80,7 @@ class DivanCategoryDetailAPIView(APIView):
     permission_classes = (AllowAny,)
 
     @swagger_auto_schema(
-        operation_description="Retrieve details of a specific Divan category by ID."
+        operation_description="Retrieve details of a specific Divan category by ID, including image."
     )
     def get(self, request, id, *args, **kwargs):
         try:
