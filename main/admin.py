@@ -1,10 +1,18 @@
 from django.contrib import admin
-from .models import AuthorInfo, Baburnoma, DivanCategory, DivanGroup, DivanLittleGroup,DivanText, AdminContact
+from .models import  DivanCategory, DivanGroup, DivanText, AdminContact
 
-admin.site.register(AuthorInfo)
-admin.site.register(Baburnoma)
-admin.site.register(DivanCategory)
-admin.site.register(DivanGroup)
 admin.site.register(DivanText)
-admin.site.register(DivanLittleGroup)
-admin.site.register(AdminContact)
+
+@admin.register(DivanCategory)
+class DivanCategoryAdmin(admin.ModelAdmin):
+    list_display = ['name','image']
+    search_fields = ['name']
+
+@admin.register(DivanGroup)
+class DivanGroupAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    search_fields = ['name']
+@admin.register(AdminContact)
+class AdminContactAdmin(admin.ModelAdmin):
+    list_display = ['name','email','message','created_at']
+    search_fields = ['name','email','message']

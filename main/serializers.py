@@ -1,3 +1,4 @@
+from django.template.context_processors import request
 from rest_framework import serializers
 from .models import AuthorInfo,Baburnoma,DivanCategory,DivanGroup,DivanLittleGroup,DivanText,AdminContact
 
@@ -36,7 +37,11 @@ class DivanCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DivanCategory
-        fields = ['id','name','groups','image']
+        fields = ['id','name','groups','image_url']
+
+    def get_image_url(self,obj):
+        request = self.context.get('request')
+        return request.build_absolute_uri(obj.image_url) if obj.image_url else None
 
 class AdminContactSerializer(serializers.ModelSerializer):
     class Meta:

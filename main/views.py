@@ -72,7 +72,8 @@ class DivanCategoryAPIView(APIView):
             'groups__little_groups',
             'groups__little_groups__texts'
         ).distinct()
-        serializer = DivanCategorySerializer(queryset, many=True)
+        # Request kontekstini serializerga qo'shish
+        serializer = DivanCategorySerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
 
 
