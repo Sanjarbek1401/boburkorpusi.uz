@@ -33,18 +33,21 @@ class DivanGroupSerializer(serializers.ModelSerializer):
         fields = ['id','name','category','little_groups']
 
 class DivanCategorySerializer(serializers.ModelSerializer):
-    groups = DivanGroupSerializer(many=True,read_only=True)
+    groups = DivanGroupSerializer(many=True, read_only=True)
     image_url = serializers.SerializerMethodField()
 
     class Meta:
         model = DivanCategory
-        fields = ['id','name','groups','image_url']
+        fields = ['id', 'name', 'groups', 'image_url']
 
     def get_image_url(self, obj):
         request = self.context.get('request')
-        if obj.image:  # Tasdiqlash uchun, `image` modeli ustuniga ega ekanligini tekshiring
+        if request and obj.image:  # Request mavjudligini va image borligini tekshirish
             return request.build_absolute_uri(obj.image.url)
         return None
+
+
+
 class AdminContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = AdminContact

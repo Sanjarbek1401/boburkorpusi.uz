@@ -72,11 +72,16 @@ class DivanCategoryAPIView(APIView):
             'groups__little_groups',
             'groups__little_groups__texts'
         ).distinct()
-        # Request kontekstini serializerga qo'shish
+        # So'rov bo'yicha filtrlarni qo'llash
+        queryset = self.filter_queryset(queryset)
+
+        # Kontekstda `request` qo'shishni unutmang
         serializer = DivanCategorySerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
 
-
+    def filter_queryset(self, queryset):
+        search_backend = filters.SearchFilter()
+        return search_backend.filter_queryset(self.request, queryset, view=self)
 class DivanCategoryDetailAPIView(APIView):
     permission_classes = (AllowAny,)
 
@@ -93,9 +98,9 @@ class DivanCategoryDetailAPIView(APIView):
         except DivanCategory.DoesNotExist:
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        serializer = DivanCategorySerializer(category)
+        # request-ni serializer ga context sifatida uzatish
+        serializer = DivanCategorySerializer(category, context={'request': request})
         return Response(serializer.data)
-
 
 class DivanGroupAPIView(APIView):
     permission_classes = (AllowAny,)
