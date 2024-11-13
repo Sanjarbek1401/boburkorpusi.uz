@@ -13,7 +13,8 @@ from main.views import (
     DivanTextAPIView,
     AdminContactAPIView,
     DivanCategoryDetailAPIView,
-    DivanGroupDetailAPIView
+    DivanGroupDetailAPIView,
+    DivanTextDetailAPIView
 )
 
 schema_view = get_schema_view(
@@ -40,6 +41,7 @@ urlpatterns = [
 
     path('api/divan-groups/', DivanGroupAPIView.as_view(), name='divan-groups'),
     path('api/groups/<int:id>/', DivanGroupDetailAPIView.as_view(), name='divan-group-detail'),
+    path('api/divantexts/<int:pk>/', DivanTextDetailAPIView.as_view(), name='divantext-detail'),
 
     path('api/divan-texts/', DivanTextAPIView.as_view(), name='divan-texts'),
     path('api/contacts/', AdminContactAPIView.as_view(), name='contacts'),

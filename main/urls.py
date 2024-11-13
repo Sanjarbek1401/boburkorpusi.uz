@@ -28,6 +28,8 @@ urlpatterns = [
     path('divan-groups/', views.DivanGroupAPIView.as_view(), name='divan-groups'),
     path('groups/<int:id>/', views.DivanGroupDetailAPIView.as_view(), name='divan-group-detail'),
     path('divan-texts/', views.DivanTextAPIView.as_view(), name='divan-texts'),
+    path('divantexts/<int:pk>/', views.DivanTextDetailAPIView.as_view(), name='divantext-detail'),
+
     path('contacts/', views.AdminContactAPIView.as_view(), name='contacts'),
 
     # Swagger va Redoc uchun

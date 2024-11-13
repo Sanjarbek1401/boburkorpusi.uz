@@ -9,6 +9,7 @@ from .models import *
 from .serializers import *
 from drf_yasg import openapi
 from rest_framework import status
+from rest_framework.exceptions import NotFound
 
 class AuthorInfoAPIView(APIView):
     permission_classes = (AllowAny,)
@@ -114,6 +115,21 @@ class DivanTextAPIView(APIView):
         texts = DivanText.objects.all()
         serializer = DivanTextSerializer(texts, many=True)
         return Response(serializer.data)
+
+
+class DivanTextDetailAPIView(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request, pk, *args, **kwargs):
+        try:
+            # ID orqali DivanText ob'ektini olish
+            text = DivanText.objects.get(pk=pk)
+        except DivanText.DoesNotExist:
+            raise NotFound(detail="DivanText with the given ID does not exist.", code=status.HTTP_404_NOT_FOUND)
+
+        # Serializerni ishlatib DivanText ob'ektini JSON formatida qaytarish
+        serializer = DivanTextSerializer(text)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class AdminContactAPIView(APIView):
