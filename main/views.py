@@ -33,29 +33,15 @@ class DivanCategoryAPIView(APIView):
     permission_classes = (AllowAny,)
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     filterset_class = DivanCategoryFilter
-    search_fields = ['name', 'groups__name', 'groups__little_groups__name', 'groups__little_groups__texts__text']
+    search_fields = ['name', 'groups__name', 'groups__texts__text']
 
     @swagger_auto_schema(
-        operation_description="""
-        List and search Divan categories.
-
-        You can search using the following parameters:
-        - group_name: Filter by Divan Group name
-        - little_group_name: Filter by Divan Little Group name
-        - text_content: Filter by text content
-        - search: Search across all fields
-        """,
+        operation_description="""List and search Divan categories.""",
         manual_parameters=[
             openapi.Parameter(
                 'group_name',
                 openapi.IN_QUERY,
                 description="Filter by Divan Group name",
-                type=openapi.TYPE_STRING
-            ),
-            openapi.Parameter(
-                'little_group_name',
-                openapi.IN_QUERY,
-                description="Filter by Divan Little Group name",
                 type=openapi.TYPE_STRING
             ),
             openapi.Parameter(
@@ -68,20 +54,16 @@ class DivanCategoryAPIView(APIView):
     )
     def get(self, request, *args, **kwargs):
         queryset = DivanCategory.objects.prefetch_related(
-            'groups',
-            'groups__little_groups',
-            'groups__little_groups__texts'
+            'groups', 'groups__texts'  # little_groups olib tashlandi
         ).distinct()
-        # So'rov bo'yicha filtrlarni qo'llash
         queryset = self.filter_queryset(queryset)
-
-        # Kontekstda `request` qo'shishni unutmang
         serializer = DivanCategorySerializer(queryset, many=True, context={'request': request})
         return Response(serializer.data)
 
     def filter_queryset(self, queryset):
         search_backend = filters.SearchFilter()
         return search_backend.filter_queryset(self.request, queryset, view=self)
+
 class DivanCategoryDetailAPIView(APIView):
     permission_classes = (AllowAny,)
 
@@ -91,16 +73,14 @@ class DivanCategoryDetailAPIView(APIView):
     def get(self, request, id, *args, **kwargs):
         try:
             category = DivanCategory.objects.prefetch_related(
-                'groups',
-                'groups__little_groups',
-                'groups__little_groups__texts'
+                'groups', 'groups__texts'
             ).get(id=id)
         except DivanCategory.DoesNotExist:
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        # request-ni serializer ga context sifatida uzatish
         serializer = DivanCategorySerializer(category, context={'request': request})
         return Response(serializer.data)
+
 
 class DivanGroupAPIView(APIView):
     permission_classes = (AllowAny,)
@@ -115,24 +95,15 @@ class DivanGroupDetailAPIView(APIView):
     permission_classes = (AllowAny,)
 
     @swagger_auto_schema(
-        operation_description="Retrieve details of a specific Divan group by ID."
+        operation_description="Retrieve details of a specific Divan group by ID, including associated DivanText objects."
     )
     def get(self, request, id, *args, **kwargs):
         try:
-            group = DivanGroup.objects.get(id=id)
+            group = DivanGroup.objects.prefetch_related('texts').get(id=id)
         except DivanGroup.DoesNotExist:
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
         serializer = DivanGroupSerializer(group)
-        return Response(serializer.data)
-
-
-class DivanLittleGroupAPIView(APIView):
-    permission_classes = (AllowAny,)
-
-    def get(self, request, *args, **kwargs):
-        little_groups = DivanLittleGroup.objects.all()
-        serializer = DivanLittleGroupSerializer(little_groups, many=True)
         return Response(serializer.data)
 
 

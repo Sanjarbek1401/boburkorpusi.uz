@@ -29,19 +29,18 @@ class DivanGroup(models.Model):
     def __str__(self):
         return f'{self.category.name} - {self.name}'
 
-class DivanLittleGroup(models.Model):
-    group = models.ForeignKey(DivanGroup,related_name='little_groups', on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
 
-    def __str__(self):
-        return f'{self.group.name} - {self.name}'
 
 class DivanText(models.Model):
-    little_group = models.ForeignKey(DivanLittleGroup,related_name='texts', on_delete=models.CASCADE)
+    devon_group = models.ForeignKey(DivanGroup,related_name='texts', on_delete=models.CASCADE,null = True)
     text = models.TextField()
 
     def __str__(self):
-        return f'{self.little_group.name} - {self.text}'
+        if self.devon_group:
+            devon_group_name = self.devon_group.name
+        else:
+            devon_group_name = 'No Group'
+        return f'{devon_group_name} - {self.text}'
 
 class AdminContact(models.Model):
     name = models.CharField(max_length=100)

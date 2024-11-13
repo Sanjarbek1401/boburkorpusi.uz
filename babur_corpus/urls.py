@@ -10,7 +10,6 @@ from main.views import (
     BaburnomaAPIView,
     DivanCategoryAPIView,
     DivanGroupAPIView,
-    DivanLittleGroupAPIView,
     DivanTextAPIView,
     AdminContactAPIView,
     DivanCategoryDetailAPIView,
@@ -40,7 +39,6 @@ urlpatterns = [
     path('api/categories/<int:id>/', DivanCategoryDetailAPIView.as_view(), name='divan-category-detail'),
 
     path('api/divan-groups/', DivanGroupAPIView.as_view(), name='divan-groups'),
-    path('api/divan-little-groups/', DivanLittleGroupAPIView.as_view(), name='divan-little-groups'),
     path('api/groups/<int:id>/', DivanGroupDetailAPIView.as_view(), name='divan-group-detail'),
 
     path('api/divan-texts/', DivanTextAPIView.as_view(), name='divan-texts'),

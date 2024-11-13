@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import  DivanCategory, DivanGroup, DivanText, AdminContact
 
-admin.site.register(DivanText)
 
 @admin.register(DivanCategory)
 class DivanCategoryAdmin(admin.ModelAdmin):
@@ -12,6 +11,12 @@ class DivanCategoryAdmin(admin.ModelAdmin):
 class DivanGroupAdmin(admin.ModelAdmin):
     list_display = ['name']
     search_fields = ['name']
+
+@admin.register(DivanText)
+class DivanTextAdmin(admin.ModelAdmin):
+    list_display = ['text']
+    search_fields = ['text']
+
 @admin.register(AdminContact)
 class AdminContactAdmin(admin.ModelAdmin):
     list_display = ['name','email','message','created_at']
