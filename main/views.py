@@ -10,6 +10,7 @@ from .serializers import *
 from drf_yasg import openapi
 from rest_framework import status
 from rest_framework.exceptions import NotFound
+from django.db.models import Q
 
 class AuthorInfoAPIView(APIView):
     permission_classes = (AllowAny,)
@@ -131,6 +132,36 @@ class DivanTextDetailAPIView(APIView):
         serializer = DivanTextSerializer(text)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+class SearchAPIView(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request, *args, **kwargs):
+        query = request.GET.get('q', None)
+
+        if query:
+            # DivanCategory dan qidirish
+            category_results = DivanCategory.objects.filter(Q(name__icontains=query))
+            category_serializer = DivanCategorySerializer(category_results, many=True)
+
+            # DivanGroup dan qidirish
+            group_results = DivanGroup.objects.filter(Q(name__icontains=query))
+            group_serializer = DivanGroupSerializer(group_results, many=True)
+
+            # DivanText dan qidirish
+            text_results = DivanText.objects.filter(Q(text__icontains=query))
+            text_serializer = DivanTextSerializer(text_results, many=True)
+
+            # Natijalarni JSON formatida birlashtirish
+            data = {
+                'categories': category_serializer.data,
+                'groups': group_serializer.data,
+                'texts': text_serializer.data,
+            }
+
+            return Response(data)
+
+        return Response({'message': 'Qidiruv so\'zi kiritilmagan.'})
 
 class AdminContactAPIView(APIView):
     permission_classes = (AllowAny,)
