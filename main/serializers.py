@@ -13,7 +13,7 @@ class BaburnomaSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Baburnoma
-        fields = ['id', 'title', 'description', 'pdf_file', 'pdf_file_url', 'uploaded_at']
+        fields = ['id', 'title',  'pdf_file', 'pdf_file_url', 'uploaded_at']
 
     def get_pdf_file_url(self, obj):
         request = self.context.get('request')
