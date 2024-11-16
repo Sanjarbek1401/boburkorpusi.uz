@@ -9,10 +9,17 @@ class AuthorInfoSerializer(serializers.ModelSerializer):
 
 
 class BaburnomaSerializer(serializers.ModelSerializer):
+    pdf_file_url = serializers.SerializerMethodField()
+
     class Meta:
         model = Baburnoma
-        fields = '__all__'
+        fields = ['id', 'title', 'description', 'pdf_file', 'pdf_file_url', 'uploaded_at']
 
+    def get_pdf_file_url(self, obj):
+        request = self.context.get('request')
+        if obj.pdf_file:
+            return request.build_absolute_uri(obj.pdf_file.url)
+        return None
 
 class DivanTextSerializer(serializers.ModelSerializer):
     class Meta:

@@ -11,6 +11,7 @@ from drf_yasg import openapi
 from rest_framework import status
 from rest_framework.exceptions import NotFound
 from django.db.models import Q
+from rest_framework.generics import RetrieveAPIView
 
 class AuthorInfoAPIView(APIView):
     permission_classes = (AllowAny,)
@@ -26,9 +27,14 @@ class BaburnomaAPIView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, *args, **kwargs):
-        baburnoma = Baburnoma.objects.all()
-        serializer = BaburnomaSerializer(baburnoma, many=True)
+        boburnoma_list = Baburnoma.objects.all()
+        serializer = BaburnomaSerializer(boburnoma_list, many=True, context ={"request":request})
         return Response(serializer.data)
+    
+class BaburnomaDetailAPIView(RetrieveAPIView):
+    permission_classes = (AllowAny,)
+    queryset = Baburnoma.objects.all()
+    serializer_class = BaburnomaSerializer
 
 
 class DivanCategoryAPIView(APIView):

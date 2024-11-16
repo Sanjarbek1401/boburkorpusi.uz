@@ -22,7 +22,9 @@ schema_view = get_schema_view(
 # Yo‘llarni belgilash
 urlpatterns = [
     path('authors/', views.AuthorInfoAPIView.as_view(), name='author-info'),
-    path('baburnoma/', views.BaburnomaAPIView.as_view(), name='baburnoma'),
+    path('boburnoma/', views.BaburnomaAPIView.as_view(), name='boburnoma_list'),
+    path('boburnoma/<int:pk>/', views.BaburnomaDetailAPIView.as_view(), name='boburnoma-detail'),
+    
     path('divan-categories/', views.DivanCategoryAPIView.as_view(), name='divan-categories'),
     path('categories/<int:id>/', views.DivanCategoryDetailAPIView.as_view(), name='divan-category-detail'),
     path('divan-groups/', views.DivanGroupAPIView.as_view(), name='divan-groups'),

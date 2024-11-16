@@ -15,7 +15,9 @@ from main.views import (
     DivanCategoryDetailAPIView,
     DivanGroupDetailAPIView,
     DivanTextDetailAPIView,
-    SearchAPIView
+    SearchAPIView,
+    BaburnomaAPIView,
+    BaburnomaDetailAPIView
 )
 
 schema_view = get_schema_view(
@@ -36,7 +38,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # API URLs
     path('api/authors/', AuthorInfoAPIView.as_view(), name='author-info'),
-    path('api/baburnoma/', BaburnomaAPIView.as_view(), name='baburnoma'),
+    path('api/boburnoma/', BaburnomaAPIView.as_view(), name='boburnoma_list'),
+    path('api/boburnoma/<int:pk>/', BaburnomaDetailAPIView.as_view(), name='boburnoma-detail'),
+
     path('api/divan-categories/', DivanCategoryAPIView.as_view(), name='divan-categories'),
     path('api/categories/<int:id>/', DivanCategoryDetailAPIView.as_view(), name='divan-category-detail'),
 

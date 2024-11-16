@@ -10,7 +10,9 @@ class AuthorInfo(models.Model):
 
 class Baburnoma(models.Model):
     title = models.CharField(max_length=100)
-    content = models.TextField()
+    description = models.TextField(blank=True,null=True)
+    pdf_file = models.FileField(upload_to='boburnoma_pdfs/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.title
