@@ -24,5 +24,5 @@ class AdminContactAdmin(admin.ModelAdmin):
 
 @admin.register(Baburnoma)
 class BaburnomaAdmin(admin.ModelAdmin):
-    list_display = ['title','description','uploaded_at']
+    list_display = ['title','uploaded_at']
     
