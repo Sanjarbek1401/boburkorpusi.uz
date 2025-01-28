@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Bobur Devoni{% endblock %}
+
+{% block content %}
+<div class="content-section">
+    <div class="divan-container">
+        <div class="text-center mb-5">
+            <h1 class="main-title">Bobur Devoni</h1>
+            <p class="lead text-muted">Zahiriddin Muhammad Bobur she'riyati</p>
+        </div>
+
+        <div class="categories-grid">
+            {% for category in categories %}
+            <div class="category-card">
+                <a href="{% url 'divan_category' category.id %}" class="category-link">
+                    {% if category.image %}
+                    <div class="category-image-wrapper">
+                        <img src="{{ category.image.url }}" alt="{{ category.name }}" class="category-image">
+                    </div>
+                    {% endif %}
+                    <div class="category-content">
+                        <h2 class="category-title">{{ category.name }}</h2>
+                        {% if category.count %}
+                        <span class="category-count">{{ category.count }} asarlar</span>
+                        {% endif %}
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --card-bg: #ffffff;
+        --card-hover-bg: #f8fafc;
+        --card-border: #e2e8f0;
+        --title-color: #1e3d59;
+        --shadow-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .content-section {
+        padding: 4rem 0;
+        background: var(--secondary-bg);
+    }
+
+    .divan-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 2.5rem;
+        margin: 0 auto;
+    }
+
+    .category-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px var(--shadow-color);
+        display: flex;
+        flex-direction: column;
+        height: 400px; /* Fixed height for all cards */
+    }
+
+    .category-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px var(--shadow-color);
+    }
+
+    .category-link {
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .category-image-wrapper {
+        height: 300px; /* Fixed height for image wrapper */
+        position: relative;
+        overflow: hidden;
+    }
+
+    .category-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .category-card:hover .category-image {
+        transform: scale(1.05);
+    }
+
+    .category-content {
+        padding: 1.25rem;
+        background: var(--card-bg);
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex: 1;
+    }
+
+    .category-title {
+        font-size: 1.5rem;
+        color: var(--title-color);
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .category-count {
+        font-size: 0.9rem;
+        color: #64748b;
+        display: inline-block;
+        background: #f1f5f9;
+        border-radius: 20px;
+    }
+
+    .main-title {
+        color: var(--title-color);
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        text-align: center;
+    }
+
+    .lead {
+        text-align: center;
+        margin-bottom: 3rem;
+        color: #64748b;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .mb-5 {
+        margin-bottom: 3rem;
+    }
+
+    @media (max-width: 1024px) {
+        .categories-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+        
+        .category-card {
+            height: 380px;
+        }
+        
+        .category-image-wrapper {
+            height: 280px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .categories-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .divan-container {
+            padding: 0 1rem;
+        }
+
+        .content-section {
+            padding: 2rem 0;
+        }
+
+        .main-title {
+            font-size: 2rem;
+        }
+        
+        .category-card {
+            height: 360px;
+        }
+        
+        .category-image-wrapper {
+            height: 260px;
+        }
+    }
+</style>
+{% endblock %}

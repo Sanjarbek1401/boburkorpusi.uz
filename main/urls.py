@@ -21,24 +21,19 @@ schema_view = get_schema_view(
 
 # Yo‘llarni belgilash
 urlpatterns = [
-    path('authors/', views.AuthorInfoAPIView.as_view(), name='author-info'),
-    path('boburnoma/', views.BaburnomaAPIView.as_view(), name='boburnoma_list'),
-    path('boburnoma/<int:pk>/', views.BaburnomaDetailAPIView.as_view(), name='boburnoma-detail'),
-    
-    path('divan-categories/', views.DivanCategoryAPIView.as_view(), name='divan-categories'),
-    path('categories/<int:id>/', views.DivanCategoryDetailAPIView.as_view(), name='divan-category-detail'),
-    path('divan-groups/', views.DivanGroupAPIView.as_view(), name='divan-groups'),
-    path('groups/<int:id>/', views.DivanGroupDetailAPIView.as_view(), name='divan-group-detail'),
-    path('divan-texts/', views.DivanTextAPIView.as_view(), name='divan-texts'),
-    path('divantexts/<int:pk>/', views.DivanTextDetailAPIView.as_view(), name='divantext-detail'),
-    path('search/', views.SearchAPIView.as_view(), name='search-api'),
-    path('contacts/', views.AdminContactAPIView.as_view(), name='contacts'),
+    path('', views.home, name='home'),
+    path('author/', views.author, name='author'),
+    path('divan/', views.divan, name='divan'),
+    path('divan/category/<int:category_id>/', views.divan_category, name='divan_category'),
+    path('divan/text/<int:group_id>/', views.divan_text_detail, name='divan_text_detail'),
+    path('divan/work/<int:work_id>/', views.work_detail, name='work_detail'),
+    path('baburnoma/', views.baburnoma, name='baburnoma'),
+    path('contact/', views.contact, name='contact'),
+    path('search/', views.search, name='search'),
+    path('lugatlar/', views.dictionary_list, name='dictionary_list'),
 
     # Swagger va Redoc uchun
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-

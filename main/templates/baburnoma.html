@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Boburnoma - Bobur Korpusi{% endblock %}
+
+{% block content %}
+<div class="content-section">
+    <div class="container">
+        <h1 class="section-title">Boburnoma</h1>
+        {% if error %}
+            <div class="error-message">
+                <p>{{ error }}</p>
+            </div>
+        {% endif %}
+        <div class="baburnoma-intro">
+            <p>"Boburnoma" - Zahiriddin Muhammad Boburning mashhur asari, tarixiy-badiiy memuarlar to'plami.</p>
+        </div>
+        <div class="baburnoma-entries">
+            {% if entries %}
+                {% for entry in entries %}
+                    <div class="entry-card">
+                        <h3>{{ entry.title }}</h3>
+                        <p>{{ entry.excerpt }}</p>
+                        <a href="{% url 'baburnoma_detail' entry.id %}" class="read-more">Batafsil o'qish</a>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="no-entries">
+                    <p>Hozircha ma'lumotlar mavjud emas.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

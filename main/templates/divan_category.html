@@ -1,0 +1,261 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ category.name }} - Bobur Devoni{% endblock %}
+
+{% block content %}
+<div class="content-section">
+    <div class="category-container">
+        <nav class="breadcrumb-nav">
+            <ol class="breadcrumb-list">
+                <li class="breadcrumb-item"><a href="{% url 'divan' %}">Bobur Devoni</a></li>
+                <li class="breadcrumb-item active">{{ category.name }}</li>
+            </ol>
+        </nav>
+
+        <div class="category-header text-center">
+            <h1 class="category-main-title">{{ category.name }}</h1>
+            {% comment %} {% if category.image %}
+                <div class="category-banner-wrapper">
+                    <img src="{{ category.image.url }}" alt="{{ category.name }}" class="category-banner-image">
+                </div>
+            {% endif %} {% endcomment %}
+        </div>
+
+        <div class="groups-grid">
+            {% for group in items %}
+            <div class="group-card">
+                <a href="{% url 'divan_text_detail' group.id %}" class="group-link">
+
+                    <div class="group-content">
+                        <h3 class="group-title">{{ group.name }}</h3>
+                        <span class="view-more">Batafsil</span>
+                    </div>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --card-bg: #ffffff;
+        --card-hover-bg: #f8fafc;
+        --card-border: #e2e8f0;
+        --title-color: #1e3d59;
+        --shadow-color: rgba(0, 0, 0, 0.1);
+        --accent-color: #f9a825;
+        --text-muted: #64748b;
+    }
+
+    .content-section {
+        padding: 3rem 0;
+        background: var(--secondary-bg);
+    }
+
+    .category-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    /* Breadcrumb Styles */
+    .breadcrumb-nav {
+        margin-top: 5rem;
+        margin-bottom: 2rem;
+    }
+
+    .breadcrumb-list {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        gap: 0.5rem;
+    }
+
+    .breadcrumb-item {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+    }
+
+    .breadcrumb-item a {
+        color: var(--accent-color);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .breadcrumb-item a:hover {
+        color: #e69321;
+    }
+
+    .breadcrumb-item:not(:last-child)::after {
+        content: '/';
+        margin-left: 0.5rem;
+        color: var(--text-muted);
+    }
+
+    /* Category Header Styles */
+    .category-header {
+        margin-bottom: 3rem;
+        text-align: center;
+    }
+
+    .category-main-title {
+        font-size: 2.5rem;
+        color: var(--title-color);
+        margin-bottom: 2rem;
+        font-weight: 700;
+    }
+
+    .category-banner-wrapper {
+        width: 100%;
+        height: 300px;
+        overflow: hidden;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px var(--shadow-color);
+    }
+
+    .category-banner-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Groups Grid Styles */
+    .groups-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 2rem;
+    }
+
+    .group-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px var(--shadow-color);
+
+    }
+
+    .group-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px var(--shadow-color);
+    }
+
+    .group-link {
+        text-decoration: none;
+        color: inherit;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .group-image-wrapper {
+        height: 220px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .group-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .group-card:hover .group-image {
+        transform: scale(1.05);
+    }
+
+    .group-content {
+        padding: 1.25rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        flex: 1;
+    }
+
+    .group-title {
+        font-size: 1.1rem;
+        color: var(--title-color);
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .view-more {
+        display: inline-block;
+        color: var(--accent-color);
+        font-size: 0.9rem;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border: 1px solid var(--accent-color);
+        border-radius: 20px;
+        margin-top: 0.75rem;
+        transition: all 0.3s ease;
+    }
+
+    .group-card:hover .view-more {
+        background: var(--accent-color);
+        color: white;
+    }
+
+    @media (max-width: 1200px) {
+        .groups-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 900px) {
+        .groups-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .category-main-title {
+            font-size: 2rem;
+        }
+
+        .category-banner-wrapper {
+            height: 250px;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .groups-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .category-container {
+            padding: 0 1rem;
+        }
+
+        .content-section {
+            padding: 2rem 0;
+        }
+
+        .category-main-title {
+            font-size: 1.75rem;
+        }
+
+        .category-banner-wrapper {
+            height: 200px;
+        }
+
+        .group-card {
+            height: 300px;
+        }
+
+        .group-image-wrapper {
+            height: 200px;
+        }
+    }
+</style>
+{% endblock %}

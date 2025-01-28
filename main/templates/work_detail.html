@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ work.title }} - Bobur Devoni{% endblock %}
+
+{% block content %}
+<div class="content-section">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'divan' %}">Bobur Devoni</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'divan_category' work.category.id %}">{{ work.category.name }}</a></li>
+                <li class="breadcrumb-item active">{{ work.title }}</li>
+            </ol>
+        </nav>
+
+        <div class="work-content">
+            <h1 class="work-title">{{ work.title }}</h1>
+            <div class="work-text">
+                {{ work.content|linebreaks }}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .content-section {
+        padding: 4rem 0;
+        background: #f8f9fa;
+    }
+
+    .work-content {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .work-title {
+        font-size: 2rem;
+        color: #2c3e50;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .work-text {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: #333;
+    }
+
+    .breadcrumb {
+        background: transparent;
+        padding: 0;
+        margin-bottom: 2rem;
+    }
+
+    .breadcrumb-item a {
+        color: #FFA500;
+        text-decoration: none;
+    }
+
+    .breadcrumb-item a:hover {
+        color: #ff8c00;
+    }
+
+    .breadcrumb-item.active {
+        color: #6c757d;
+    }
+</style>
+{% endblock %}

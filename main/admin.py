@@ -1,28 +1,94 @@
 from django.contrib import admin
-from .models import  DivanCategory, DivanGroup, DivanText, AdminContact,Baburnoma
+from .models import DevonCategory, DevonGroup, DevonText, AdminContact, Baburnoma, Boburnoma, DevonItem, Work,Dictionary
+from django.db import models
+from django.forms import Textarea
 
 
-@admin.register(DivanCategory)
-class DivanCategoryAdmin(admin.ModelAdmin):
-    list_display = ['name','image']
+@admin.register(DevonCategory)
+class DevonCategoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'count', 'order']
+    list_editable = ['count', 'order']
     search_fields = ['name']
 
-@admin.register(DivanGroup)
-class DivanGroupAdmin(admin.ModelAdmin):
-    list_display = ['name']
+@admin.register(DevonGroup)
+class DevonGroupAdmin(admin.ModelAdmin):
+    list_display = ['name', 'category', 'order']
+    list_filter = ['category']
+    list_editable = ['order']
     search_fields = ['name']
 
-@admin.register(DivanText)
-class DivanTextAdmin(admin.ModelAdmin):
-    list_display = ['text']
+@admin.register(DevonText)
+class DevonTextAdmin(admin.ModelAdmin):
+    list_display = ['group', 'text', 'order']
+    list_filter = ['group__category', 'group']
+    list_editable = ['order']
     search_fields = ['text']
 
 @admin.register(AdminContact)
 class AdminContactAdmin(admin.ModelAdmin):
-    list_display = ['name','email','message','created_at']
-    search_fields = ['name','email','message']
+    list_display = ['name', 'email', 'message', 'created_at']
+    search_fields = ['name', 'email', 'message']
+
 
 @admin.register(Baburnoma)
 class BaburnomaAdmin(admin.ModelAdmin):
-    list_display = ['title','uploaded_at']
+    list_display = ['title', 'has_pdf', 'has_text', 'uploaded_at']
+    search_fields = ['title', 'text_content']
+    readonly_fields = ['uploaded_at']
     
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 30, 'cols': 100})},
+    }
+    
+    fieldsets = (
+        ('Asosiy', {
+            'fields': ('title', 'pdf_file'),
+        }),
+        ('Qidiruv uchun matn', {
+            'fields': ('text_content',),
+            'description': 'Bu yerga Boburnoma matnini qidiruvda ishlashi uchun joylashtiring. Bu matn faqat qidiruv uchun ishlatiladi.',
+        }),
+        ('Qo\'shimcha', {
+            'fields': ('uploaded_at',),
+            'classes': ('collapse',),
+        }),
+    )
+
+    def has_pdf(self, obj):
+        return bool(obj.pdf_file)
+    has_pdf.short_description = 'PDF mavjud'
+    has_pdf.boolean = True
+
+    def has_text(self, obj):
+        return bool(obj.text_content)
+    has_text.short_description = 'Matn mavjud'
+    has_text.boolean = True
+
+
+
+@admin.register(DevonItem)
+class DevonItemAdmin(admin.ModelAdmin):
+    list_display = ['title', 'category', 'order']
+    list_editable = ['order']
+    list_filter = ['category']
+    search_fields = ['title', 'content']
+
+@admin.register(Work)
+class WorkAdmin(admin.ModelAdmin):
+    list_display = ['title', 'category', 'order']
+    list_editable = ['order']
+    list_filter = ['category']
+    search_fields = ['title', 'content']
+
+@admin.register(Dictionary)
+class DictionaryAdmin(admin.ModelAdmin):
+    list_display = ('word', 'description')
+    search_fields = ('word', 'description')
+    ordering = ('word',)
+    list_per_page = 20
+
+    fieldsets = (
+        (None, {
+            'fields': ('word', 'description')
+        }),
+    )

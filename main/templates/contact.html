@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Biz bilan Aloqa - Bobur Korpusi{% endblock %}
+
+{% block content %}
+<div class="content-section">
+    <div class="container">
+        <h1 class="section-title">Biz bilan Aloqa</h1>
+        <div class="contact-content">
+            <div class="contact-info">
+                <h2>Bog'lanish uchun ma'lumotlar</h2>
+                {% if contacts %}
+                    {% for contact in contacts %}
+                        <div class="contact-item">
+                            <h3>{{ contact.name }}</h3>
+                            <p>{{ contact.email }}</p>
+                            <p>{{ contact.phone }}</p>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="contact-item">
+                        <h3>Bobur Korpusi</h3>
+                        <p>Email: info@boburcorpus.uz</p>
+                        <p>Tel: +998 93 744 50 55</p>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="contact-form">
+                <h2>Xabar yuborish</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="name">Ismingiz</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Xabar</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-btn">Yuborish</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

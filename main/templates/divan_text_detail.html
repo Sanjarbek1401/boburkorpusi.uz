@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ group.name }} - Bobur Devoni{% endblock %}
+
+{% block content %}
+<div class="content-section">
+    <div class="detail-container">
+        <nav class="breadcrumb-nav">
+            <ol class="breadcrumb-list">
+                <li class="breadcrumb-item"><a href="{% url 'divan' %}">Bobur Devoni</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'divan_category' group.category.id %}">{{ group.category.name }}</a></li>
+                <li class="breadcrumb-item active">{{ group.name }}</li>
+            </ol>
+        </nav>
+
+        <div class="text-content">
+            <h1 class="text-title">{{ group.name }}</h1>
+            <div class="text-wrapper">
+                {% for text in texts %}
+                <div class="text-item dictionary-enabled">
+                    {{ text.text|linebreaks }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tooltip modal -->
+<div id="word-tooltip" class="word-tooltip">
+    <div class="tooltip-content"></div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #1e3d59;
+        --accent-color: #f9a825;
+        --text-color: #2d3748;
+        --text-muted: #64748b;
+        --bg-color: #f8fafc;
+        --card-bg: #ffffff;
+        --shadow-color: rgba(0, 0, 0, 0.1);
+        --border-color: #e2e8f0;
+        --tooltip-bg: #ffffff;
+    }
+
+    .content-section {
+        padding: 3rem 0;
+        background: var(--bg-color);
+        min-height: calc(100vh - 200px);
+    }
+
+    .detail-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    /* Breadcrumb Styles */
+    .breadcrumb-nav {
+        margin-top: 4rem;
+        margin-bottom: 2.5rem;
+        background: var(--card-bg);
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px var(--shadow-color);
+    }
+
+    .breadcrumb-list {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .breadcrumb-item {
+        font-size: 0.95rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+    }
+
+    .breadcrumb-item a {
+        color: var(--primary-color);
+        text-decoration: none;
+        transition: color 0.3s ease;
+        font-weight: 500;
+    }
+
+    .breadcrumb-item a:hover {
+        color: var(--accent-color);
+    }
+
+    .breadcrumb-item:not(:last-child)::after {
+        content: '›';
+        margin-left: 0.75rem;
+        color: var(--text-muted);
+        font-size: 1.2rem;
+        line-height: 1;
+    }
+
+    .breadcrumb-item.active {
+        color: var(--text-color);
+        font-weight: 500;
+    }
+
+    /* Text Content Styles */
+    .text-content {
+        background: var(--card-bg);
+        border-radius: 12px;
+        box-shadow: 0 4px 6px var(--shadow-color);
+        overflow: hidden;
+        margin-top: 1rem;
+    }
+
+    .text-title {
+        font-size: 2rem;
+        color: var(--primary-color);
+        margin: 0;
+        padding: 2rem;
+        text-align: center;
+        border-bottom: 1px solid var(--border-color);
+        background: linear-gradient(to right, var(--card-bg), var(--bg-color), var(--card-bg));
+    }
+
+    .text-wrapper {
+        padding: 2rem;
+    }
+
+    .text-item {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        color: var(--text-color);
+        text-align: justify;
+    }
+
+    .text-item p {
+        margin-bottom: 1.5rem;
+    }
+
+    /* Dictionary Functionality Styles */
+    .dictionary-word {
+        cursor: pointer;
+        border-bottom: 1px dashed var(--accent-color);
+        transition: all 0.3s ease;
+    }
+
+    .dictionary-word:hover {
+        background-color: rgba(249, 168, 37, 0.1);
+        color: var(--accent-color);
+    }
+
+    .word-tooltip {
+        display: none;
+        position: absolute;
+        background: var(--tooltip-bg);
+        border-radius: 8px;
+        box-shadow: 0 4px 15px var(--shadow-color);
+        padding: 1rem;
+        max-width: 300px;
+        z-index: 1000;
+        border: 1px solid var(--border-color);
+    }
+
+    .tooltip-content {
+        font-size: 0.95rem;
+        color: var(--text-color);
+        line-height: 1.6;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .detail-container {
+            padding: 0 1rem;
+        }
+
+        .breadcrumb-nav {
+            padding: 0.75rem 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .text-title {
+            font-size: 1.75rem;
+            padding: 1.5rem;
+        }
+
+        .text-wrapper {
+            padding: 1.5rem;
+        }
+
+        .text-item {
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .content-section {
+            padding: 2rem 0;
+        }
+
+        .breadcrumb-nav {
+            padding: 0.5rem 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .text-title {
+            font-size: 1.5rem;
+            padding: 1.25rem;
+        }
+
+        .text-wrapper {
+            padding: 1.25rem;
+        }
+
+        .breadcrumb-item {
+            font-size: 0.9rem;
+        }
+
+        .breadcrumb-item:not(:last-child)::after {
+            margin-left: 0.5rem;
+            font-size: 1.1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const wordDescriptions = {{ word_descriptions|json_script:"word-descriptions" }};
+    const tooltip = document.getElementById('word-tooltip');
+    
+    function processText() {
+        const textItems = document.querySelectorAll('.dictionary-enabled');
+        
+        textItems.forEach(item => {
+            const text = item.innerHTML;
+            let processedText = text;
+            
+            // Process each word in the dictionary
+            for (const [word, description] of Object.entries(wordDescriptions)) {
+                const regex = new RegExp(`\\b${word}\\b`, 'gi');
+                processedText = processedText.replace(regex, `<span class="dictionary-word" data-description="${description}">$&</span>`);
+            }
+            
+            item.innerHTML = processedText;
+        });
+    }
+    
+    // Process text when page loads
+    processText();
+    
+    // Handle word clicks
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('dictionary-word')) {
+            const description = e.target.getAttribute('data-description');
+            const rect = e.target.getBoundingClientRect();
+            
+            tooltip.style.display = 'block';
+            tooltip.querySelector('.tooltip-content').textContent = description;
+            
+            // Position tooltip
+            const tooltipRect = tooltip.getBoundingClientRect();
+            const top = rect.bottom + window.scrollY + 5;
+            const left = rect.left + (rect.width - tooltipRect.width) / 2;
+            
+            tooltip.style.top = `${top}px`;
+            tooltip.style.left = `${left}px`;
+        } else {
+            tooltip.style.display = 'none';
+        }
+    });
+});
+</script>
+{% endblock %}

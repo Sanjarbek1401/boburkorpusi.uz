@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block title %}Qidiruv Natijalari - {{ query }}{% endblock %}
+
+{% block content %}
+<div class="content-section">
+    <div class="container">
+        <div class="search-header">
+            <h1 class="search-title">Qidiruv Natijalari</h1>
+            {% if query %}
+                <p class="search-info">"{{ query }}" so'zi uchun {{ count }} ta natija topildi</p>
+            {% endif %}
+        </div>
+
+        {% if results %}
+            <div class="search-results">
+                {% for result in results %}
+                    <div class="result-item">
+                        <div class="result-header">
+                            <span class="result-type">{{ result.type }}</span>
+                            <h3 class="result-title">
+                                <a href="{{ result.url }}">{{ result.title }}</a>
+                            </h3>
+                            <span class="result-source">Manba: {{ result.source }}</span>
+                        </div>
+                        
+                        <div class="sentences-list">
+                            {% for sentence in result.sentences %}
+                                <div class="sentence-item">
+                                    <span class="sentence-number">{{ forloop.counter }}.</span>
+                                    <p class="sentence-text">{{ sentence|highlight:query|safe }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <a href="{{ result.url }}" class="read-more">To'liq o'qish →</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            {% if query %}
+                <div class="no-results">
+                    <p>Afsuski, "{{ query }}" so'zi bo'yicha hech narsa topilmadi.</p>
+                    <p>Iltimos, boshqa so'z bilan qayta urinib ko'ring.</p>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .content-section {
+        padding: 3rem 0;
+        background: var(--primary-bg);
+        min-height: calc(100vh - 200px);
+    }
+
+    .search-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .search-title {
+        color: var(--title-color);
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .search-info {
+        color: var(--text-color);
+        font-size: 1.1rem;
+        opacity: 0.8;
+    }
+
+    .result-item {
+        background: #ffffff;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--card-border);
+    }
+
+    .result-header {
+        margin-bottom: 1.5rem;
+    }
+
+    .result-type {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background-color: var(--accent-bg);
+        color: #fff;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .result-title {
+        font-size: 1.5rem;
+        margin: 0.5rem 0;
+    }
+
+    .result-title a {
+        color: var(--title-color);
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+
+    .result-title a:hover {
+        color: var(--link-color);
+    }
+
+    .result-source {
+        display: block;
+        color: var(--text-color);
+        font-size: 0.9rem;
+        opacity: 0.7;
+    }
+
+    .sentences-list {
+        margin: 1.5rem 0;
+    }
+
+    .sentence-item {
+        display: flex;
+        margin-bottom: 1rem;
+        padding: 1rem;
+        background: rgba(0, 0, 0, 0.02);
+        border-radius: 8px;
+    }
+
+    .sentence-number {
+        flex-shrink: 0;
+        width: 2rem;
+        color: var(--accent-bg);
+        font-weight: 600;
+    }
+
+    .sentence-text {
+        margin: 0;
+        line-height: 1.6;
+        color: var(--text-color);
+    }
+
+    .highlight {
+        background-color: yellow;
+        color: black;
+        font-weight: bold;
+    }
+
+    .read-more {
+        display: inline-block;
+        color: var(--link-color);
+        text-decoration: none;
+        font-weight: 500;
+        margin-top: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .read-more:hover {
+        color: var(--hover-color);
+        transform: translateX(5px);
+    }
+
+    .no-results {
+        text-align: center;
+        padding: 3rem 0;
+    }
+
+    .no-results p {
+        color: var(--text-color);
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .content-section {
+            padding: 2rem 0;
+        }
+
+        .search-title {
+            font-size: 2rem;
+        }
+
+        .result-item {
+            padding: 1.5rem;
+        }
+
+        .sentence-item {
+            padding: 0.75rem;
+        }
+    }
+</style>
+{% endblock %}

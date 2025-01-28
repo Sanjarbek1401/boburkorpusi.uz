@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}Lug'atlar - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+    <h1 class="mb-4">Lug'atlar</h1>
+    
+    <div class="search-box mb-4">
+        <form method="GET" action="{% url 'dictionary_list' %}" class="d-flex gap-2">
+            <input type="text" name="word" class="form-control" placeholder="So'z bo'yicha qidirish..." value="{{ word_query }}">
+            <input type="text" name="q" class="form-control" placeholder="So'z va izohlar bo'yicha qidirish..." value="{{ query }}">
+            <button type="submit" class="btn btn-primary">Qidirish</button>
+        </form>
+    </div>
+
+    <div class="dictionary-table">
+        <table class="table table-bordered">
+            <thead class="thead-light">
+                <tr>
+                    <th width="30%">So'z</th>
+                    <th width="70%">Izoh</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for word in words %}
+                <tr>
+                    <td class="word-cell">{{ word.word }}</td>
+                    <td class="description-cell">{{ word.description }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2" class="text-center">So'z topilmadi.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% if words.has_other_pages %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if words.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ words.previous_page_number }}{% if word_query %}&word={{ word_query }}{% endif %}{% if query %}&q={{ query }}{% endif %}">Oldingi</a>
+            </li>
+            {% endif %}
+
+            {% for num in words.paginator.page_range %}
+            <li class="page-item {% if num == words.number %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}{% if word_query %}&word={{ word_query }}{% endif %}{% if query %}&q={{ query }}{% endif %}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if words.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ words.next_page_number }}{% if word_query %}&word={{ word_query }}{% endif %}{% if query %}&q={{ query }}{% endif %}">Keyingi</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<style>
+    .dictionary-table {
+        margin-top: 2rem;
+    }
+    
+    .table {
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .table thead th {
+        background-color: #f8f9fa;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 15px;
+    }
+
+    .word-cell {
+        font-size: 20px;
+        font-weight: 600;
+        color: #1e3d59;
+        padding: 15px;
+        vertical-align: middle;
+    }
+
+    .description-cell {
+        font-size: 17px;
+        padding: 15px;
+        line-height: 1.6;
+        vertical-align: middle;
+    }
+
+    .table-bordered td, .table-bordered th {
+        border-color: #dee2e6;
+    }
+
+    .search-box {
+    max-width: 800px; /* Kenglikni cheklash */
+    margin: 20px auto; /* Yuqoridan va pastdan masofani oshirish */
+    padding: 20px 0; /* Ichki bo'shliqni oshirish */
+    }
+
+    .search-box form {
+        gap: 10px;  /* Input orasidagi masofa */
+    }
+
+    .search-box input {
+        font-size: 16px;
+        padding: 10px 15px;
+    }
+
+    .search-box button {
+        font-size: 16px;
+        padding: 10px 20px;
+        white-space: nowrap;  /* Button matnini bir qatorga chiqarish */
+    }
+
+    .pagination {
+        font-size: 16px;
+    }
+
+    .page-link {
+        padding: 10px 15px;
+    }
+</style>
+{% endblock %}

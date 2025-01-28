@@ -1,0 +1,284 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bobur Korpusi{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% block extra_css %}{% endblock %}
+    <style>
+        :root {
+            --primary-bg: #ffffff;
+            --secondary-bg: #f8fafc;
+            --accent-color: #2563eb;
+            --text-color: #1e293b;
+            --text-light: #64748b;
+            --border-color: #e2e8f0;
+            --hover-color: #1d4ed8;
+            --nav-bg: #ffffff;
+            --footer-bg: #1e293b;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+        }
+
+        .navbar {
+            background-color: var(--nav-bg);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 1rem 0;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(8px);
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: var(--accent-color);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: auto;
+        }
+
+        .search-input {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            width: 250px;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-button {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .search-button:hover {
+            background-color: var(--hover-color);
+        }
+
+        .footer {
+            background-color: var(--footer-bg);
+            color: #fff;
+            padding: 4rem 0 2rem;
+            margin-top: 4rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1.5fr;
+            gap: 4rem;
+        }
+
+        .footer-section h3 {
+            color: #fff;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-section p {
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-section ul li a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: var(--transition);
+            font-size: 0.95rem;
+        }
+
+        .footer-section ul li a:hover {
+            color: #fff;
+        }
+
+        .footer-social-icons {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .footer-social-icons a {
+            color: #cbd5e1;
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .footer-social-icons a:hover {
+            color: #fff;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid #334155;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                gap: 1rem;
+            }
+            
+            .search-form {
+                width: 100%;
+                margin-top: 1rem;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <div class="nav-links">
+                    <a href="{% url 'home' %}">Bosh Sahifa</a>
+                    <a href="{% url 'author' %}">Muallif haqida</a>
+                    <a href="{% url 'baburnoma' %}">Boburnoma</a>
+                    <a href="{% url 'divan' %}">Bobur Devoni</a>                    
+                    <a href="{% url 'dictionary_list' %}">Lug'atlar</a>
+                    {% comment %} <a href="{% url 'contact' %}">Biz bilan Aloqa</a> {% endcomment %}
+                    <form class="search-form" action="{% url 'search' %}" method="GET">
+                        <input type="text" name="q" class="search-input" placeholder="Qidirish..." value="{{ request.GET.q }}">
+                        <button type="submit" class="search-button">
+                            <i class="fas fa-search"></i>
+                            <span>Qidirish</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Biz haqimizda</h3>
+                    <p>Bobur Korpusi - Zahiriddin Muhammad Bobur asarlarini o'rganish va tadqiq qilish uchun yaratilgan zamonaviy platforma. Biz orqali buyuk shoirning boy merosini yanada chuqurroq o'rganing.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Tezkor havolalar</h3>
+                    <ul>
+                        <li><a href="{% url 'home' %}">Bosh sahifa</a></li>
+                        <li><a href="{% url 'author' %}">Muallif</a></li>
+                        <li><a href="{% url 'divan' %}">Devon</a></li>
+                        <li><a href="{% url 'dictionary_list' %}">Lug'atlar</a></li>
+                        {% comment %} <li><a href="{% url 'contact' %}">Aloqa</a></li> {% endcomment %}
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Bog'lanish</h3>
+                    <p>Email: info@boburkorpusi.uz</p>
+                    <p>Tel: +998 93 744 50 55</p>
+                    <div class="footer-social-icons">
+                        <a href="https://t.me/YourTelegramChannel" target="_blank" aria-label="Telegram">
+                            <i class="fab fa-telegram-plane"></i>
+                        </a>
+                        <a href="https://www.instagram.com/YourInstagramProfile" target="_blank" aria-label="Instagram">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.facebook.com/YourFacebookPage" target="_blank" aria-label="Facebook">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; {% now "Y" %} Bobur Korpusi. Barcha huquqlar himoyalangan.</p>
+            </div>
+        </div>
+    </footer>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+</body>
+</html>
