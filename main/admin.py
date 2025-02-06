@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import DevonCategory, DevonGroup, DevonText, AdminContact, Baburnoma, Boburnoma, DevonItem, Work,Dictionary
+from .models import DevonCategory, DevonGroup, DevonText, Baburnoma,  DevonItem, Work, Dictionary
 from django.db import models
 from django.forms import Textarea
 
@@ -9,6 +9,7 @@ class DevonCategoryAdmin(admin.ModelAdmin):
     list_display = ['name', 'count', 'order']
     list_editable = ['count', 'order']
     search_fields = ['name']
+    ordering = ('order',)
 
 @admin.register(DevonGroup)
 class DevonGroupAdmin(admin.ModelAdmin):
@@ -16,6 +17,7 @@ class DevonGroupAdmin(admin.ModelAdmin):
     list_filter = ['category']
     list_editable = ['order']
     search_fields = ['name']
+    ordering = ('order',)
 
 @admin.register(DevonText)
 class DevonTextAdmin(admin.ModelAdmin):
@@ -23,18 +25,17 @@ class DevonTextAdmin(admin.ModelAdmin):
     list_filter = ['group__category', 'group']
     list_editable = ['order']
     search_fields = ['text']
-
-@admin.register(AdminContact)
-class AdminContactAdmin(admin.ModelAdmin):
-    list_display = ['name', 'email', 'message', 'created_at']
-    search_fields = ['name', 'email', 'message']
-
+    ordering = ('order',)
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 10, 'cols': 80})},
+    }
 
 @admin.register(Baburnoma)
 class BaburnomaAdmin(admin.ModelAdmin):
     list_display = ['title', 'has_pdf', 'has_text', 'uploaded_at']
     search_fields = ['title', 'text_content']
     readonly_fields = ['uploaded_at']
+    ordering = ('-uploaded_at',)
     
     formfield_overrides = {
         models.TextField: {'widget': Textarea(attrs={'rows': 30, 'cols': 100})},
@@ -72,6 +73,10 @@ class DevonItemAdmin(admin.ModelAdmin):
     list_editable = ['order']
     list_filter = ['category']
     search_fields = ['title', 'content']
+    ordering = ('order',)
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 10, 'cols': 80})},
+    }
 
 @admin.register(Work)
 class WorkAdmin(admin.ModelAdmin):
@@ -79,6 +84,10 @@ class WorkAdmin(admin.ModelAdmin):
     list_editable = ['order']
     list_filter = ['category']
     search_fields = ['title', 'content']
+    ordering = ('order',)
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 10, 'cols': 80})},
+    }
 
 @admin.register(Dictionary)
 class DictionaryAdmin(admin.ModelAdmin):
@@ -86,7 +95,9 @@ class DictionaryAdmin(admin.ModelAdmin):
     search_fields = ('word', 'description')
     ordering = ('word',)
     list_per_page = 20
-
+    formfield_overrides = {
+        models.TextField: {'widget': Textarea(attrs={'rows': 10, 'cols': 80})},
+    }
     fieldsets = (
         (None, {
             'fields': ('word', 'description')

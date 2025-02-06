@@ -63,26 +63,9 @@ class DevonText(models.Model):
     def __str__(self):
         return f'{self.group.name} - {self.text[:50]}...'
 
-class AdminContact(models.Model):
-    name = models.CharField(max_length=100)
-    email = models.EmailField()
-    message = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return  f'Message from {self.name}'
 
-class Boburnoma(models.Model):
-    title = models.CharField(max_length=200, verbose_name="Sarlavha")
-    pdf_file = models.FileField(upload_to='boburnoma/', verbose_name="PDF fayl")
-    uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name="Yuklangan vaqt")
 
-    class Meta:
-        verbose_name = "Boburnoma"
-        verbose_name_plural = "Boburnoma"
-
-    def __str__(self):
-        return self.title
 
 class DevonItem(models.Model):
     category = models.ForeignKey(DevonCategory, on_delete=models.CASCADE, related_name='items', verbose_name="Kategoriya")

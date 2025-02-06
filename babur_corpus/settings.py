@@ -25,15 +25,15 @@ SECRET_KEY = 'django-insecure-6r0(5r)txbe1$&&@!e5#i*u(*($q*&8nyh#-v=0ei8ts2a6*=c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 CSRF_TRUSTED_ORIGINS = [
-    'https://7275-188-113-237-239.ngrok-free.app'
+    'https://d480-213-230-67-170.ngrok-free.app'
 ]
 CORS_ALLOWED_ORIGINS = [
-    'https://7275-188-113-237-239.ngrok-free.app'
+    'https://d480-213-230-67-170.ngrok-free.app'
 ]
 
 
 
-ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1', "7275-188-113-237-239.ngrok-free.app"]
+ALLOWED_HOSTS = ['*', 'localhost', '127.0.0.1', "d480-213-230-67-170.ngrok-free.app"]
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
@@ -42,16 +42,8 @@ CORS_ALLOWED_ORIGINS = [
     "https://bobur-gilt.vercel.app",
 ]
 CORS_ALLOW_CREDENTIALS = True
-# SECURE_SSL_REDIRECT = True
 CORS_ALLOW_HEADERS = '*'
-# SESSION_COOKIE_SECURE = True
-# CSRF_COOKIE_SECURE = True
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-# SECURE_HSTS_SECONDS = 31536000  # 1 year
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-# SECURE_HSTS_PRELOAD = True
 
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -61,8 +53,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
-    'rest_framework',
-    'drf_yasg',
+    # 'rest_framework',
+    # 'drf_yasg',
     'django_filters',
     'corsheaders',
 ]

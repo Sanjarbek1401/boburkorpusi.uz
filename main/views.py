@@ -16,9 +16,9 @@ def author(request):
 def baburnoma(request):
    try:
        # Get the latest uploaded Boburnoma PDF
-       boburnoma = Boburnoma.objects.latest('uploaded_at')
-       return FileResponse(boburnoma.pdf_file, content_type='application/pdf')
-   except Boburnoma.DoesNotExist:
+       baburnoma = Baburnoma.objects.latest('uploaded_at')
+       return FileResponse(baburnoma.pdf_file, content_type='application/pdf')
+   except Baburnoma.DoesNotExist:
        return render(request, 'baburnoma.html', {'error': "Hozircha PDF fayl mavjud emas"})
 
 def search(request):
@@ -70,22 +70,31 @@ def search(request):
                    'source': text.group.name
                })
 
-       # Search in Baburnoma (only title field)
-       baburnoma_results = Baburnoma.objects.filter(title__icontains=query)
+       # Search in Baburnoma (title and text_content)
+       baburnoma_results = Baburnoma.objects.filter(
+           Q(title__icontains=query) |
+           Q(text_content__icontains=query)
+       )
        for item in baburnoma_results:
            matching_sentences = []
            if query.lower() in item.title.lower():
                matching_sentences.append(item.title)
+           
+           # Search in text_content if available
+           if item.text_content:
+               text_matches = extract_sentences(item.text_content, query)
+               matching_sentences.extend(text_matches)
 
            if matching_sentences:
-               # Highlight the title
+               # Highlight the matches
                highlighted_title = highlight_text(item.title, query)
+               highlighted_sentences = [highlight_text(sentence, query) for sentence in matching_sentences[1:]] if len(matching_sentences) > 1 else []
                results.append({
-                   'type': 'Boburnoma',
+                   'type': 'Baburnoma',
                    'title': highlighted_title,
-                   'sentences': [],
-                   'url': reverse('baburnoma_detail', args=[item.id]),
-                   'source': 'Boburnoma'
+                   'sentences': highlighted_sentences,
+                   'url': reverse('baburnoma', args=[]),
+                   'source': 'Baburnoma'
                })
 
    context = {
@@ -106,17 +115,45 @@ def highlight_text(text, query):
    Returns:
        str: The text with highlighted search terms wrapped in <mark> tags.
    """
-   # Split the query into individual terms
-   terms = query.split()
-   highlighted_text = text
+   # Convert text and query to lowercase for case-insensitive matching
+   text_lower = text.lower()
+   # Split query into individual terms and clean them
+   terms = [term.strip() for term in query.lower().split()]
 
-   # Apply highlighting for each term
+   # Find all occurrences of each term
+   positions = []
    for term in terms:
-       # Compile a case-insensitive regex pattern for the term
-       pattern = re.compile(re.escape(term), re.IGNORECASE)
-       highlighted_text = pattern.sub(lambda m: f'<mark>{m.group(0)}</mark>', highlighted_text)
+       start = 0
+       while True:
+           start = text_lower.find(term, start)
+           if start == -1:  # term not found
+               break
+           positions.append((start, start + len(term)))
+           start += 1
 
-   return highlighted_text
+   # Sort positions and merge overlapping ranges
+   if not positions:
+       return text
+
+   positions.sort()
+   merged = [positions[0]]
+   for current in positions[1:]:
+       if current[0] <= merged[-1][1]:
+           # Ranges overlap, merge them
+           merged[-1] = (merged[-1][0], max(merged[-1][1], current[1]))
+       else:
+           merged.append(current)
+
+   # Build the highlighted text
+   result = []
+   last_end = 0
+   for start, end in merged:
+       result.append(text[last_end:start])
+       result.append(f'<mark>{text[start:end]}</mark>')
+       last_end = end
+   result.append(text[last_end:])
+
+   return ''.join(result)
 
 def contact(request):
    # Temporarily remove database query until model is ready
@@ -148,38 +185,39 @@ def work_detail(request, work_id):
        'work': work
    })
 
-
 def dictionary_list(request):
     query = request.GET.get('q', '')
     word_query = request.GET.get('word', '')
-
-    words = Dictionary.objects.all()
-
+    
     if word_query:
-        # Faqat so'z bo'yicha qidirish
-        words = words.filter(word__icontains=word_query)
+        # Exact word search
+        queryset = Dictionary.objects.filter(word__iexact=word_query)
     elif query:
-        # So'z va izohlar bo'yicha qidirish
-        words = words.filter(
+        # General search in both word and description
+        queryset = Dictionary.objects.filter(
             Q(word__icontains=query) |
             Q(description__icontains=query)
         )
-
-    # O'zbek alifbosi bo'yicha saralash
-    words = sorted(words, key=lambda x: uzbek_order(x.word))
-
-    paginator = Paginator(words, 20)
-    page = request.GET.get('page')
-    words = paginator.get_page(page)
-
-    return render(request, 'dictionary_list.html', {
+    else:
+        # No search query - get all words
+        queryset = Dictionary.objects.all()
+    
+    # Sort in Uzbek alphabet order
+    words = Dictionary.get_ordered_queryset()
+    
+    # Get unique first letters for navigation
+    first_letters = sorted(set(word.word[0].upper() for word in words))
+    
+    context = {
         'words': words,
+        'first_letters': first_letters,
         'query': query,
         'word_query': word_query
-    })
+    }
+    return render(request, 'dictionary_list.html', context)
 
 def uzbek_order(word):
-    """O'zbek alifbosi tartibida so'zlarni saralash uchun yordamchi funksiya"""
+    # O'zbek alifbosi tartibida so'zlarni saralash uchun yordamchi funksiya
     uzbek_alphabet = 'a b d e f g h i j k l m n o p q r s t u v x y z oʻ gʻ sh ch ng'
     order_dict = {char: i for i, char in enumerate(uzbek_alphabet)}
     return [order_dict.get(c, len(uzbek_alphabet)) for c in word.lower()]
