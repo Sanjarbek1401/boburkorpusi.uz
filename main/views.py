@@ -26,81 +26,99 @@ def search(request):
    results = []
 
    if query:
-       def extract_sentences(text, search_terms):
-           # Split text into sentences (considering basic punctuation)
-           sentences = [s.strip() for s in re.split('[.!?]', text) if s.strip()]
-           matching_sentences = []
-
-           # Convert search terms to list and clean them
-           terms = [term.strip().lower() for term in search_terms.split()]
-
-           for sentence in sentences:
-               # Check if any search term is in the sentence
-               if any(term in sentence.lower() for term in terms):
-                   matching_sentences.append(sentence)
-
-           return matching_sentences
-
-       # Lug'atdan qidirish
-       dictionary_results = Dictionary.objects.filter(
-           Q(word__icontains=query) |
-           Q(description__icontains=query)
-       )
-       for dict_item in dictionary_results:
-           results.append({
-               'type': 'Lug\'at',
-               'title': highlight_text(dict_item.word, query),
-               'sentences': [highlight_text(dict_item.description, query)],
-               'url': reverse('dictionary_list') + f'?q={query}',
-               'source': 'Lug\'at'
-           })
+       def get_kwic_context(text, search_term, context_words=5):
+           """
+           Extract Key Word In Context for the search term.
+           Returns a list of strings, each containing the search term in context.
+           """
+           # Split text into words
+           words = text.split()
+           # Find all occurrences of the search term
+           matches = []
+           for i, word in enumerate(words):
+               if search_term.lower() in word.lower():
+                   # Get context words before and after
+                   start = max(0, i - context_words)
+                   end = min(len(words), i + context_words + 1)
+                   
+                   # Create the before part
+                   before_text = ' '.join(words[start:i])
+                   if start > 0:
+                       before_text = '... ' + before_text
+                   
+                   # Get the exact match word
+                   matched_word = words[i]
+                   
+                   # Create the after part
+                   after_text = ' '.join(words[i+1:end])
+                   if end < len(words):
+                       after_text = after_text + ' ...'
+                   
+                   # Combine to create the KWIC context
+                   kwic_context = f"{before_text} {matched_word} {after_text}"
+                   matches.append(kwic_context)
+           return matches
 
        # Search in DevonText
        text_results = DevonText.objects.filter(text__icontains=query)
        for text in text_results:
-           matching_sentences = extract_sentences(text.text, query)
-           if matching_sentences:
-               # Highlight matched sentences
-               highlighted_sentences = [highlight_text(sentence, query) for sentence in matching_sentences]
+           kwic_matches = get_kwic_context(text.text, query)
+           if kwic_matches:
                results.append({
                    'type': 'Devon',
                    'title': f"{text.group.category.name} - {text.group.name}",
-                   'sentences': highlighted_sentences,
+                   'sentences': kwic_matches,
                    'url': reverse('divan_text_detail', args=[text.group.id]),
                    'source': text.group.name
                })
 
-       # Search in Baburnoma (title and text_content)
+       # Search in Baburnoma
        baburnoma_results = Baburnoma.objects.filter(
            Q(title__icontains=query) |
            Q(text_content__icontains=query)
        )
        for item in baburnoma_results:
-           matching_sentences = []
-           if query.lower() in item.title.lower():
-               matching_sentences.append(item.title)
-           
-           # Search in text_content if available
            if item.text_content:
-               text_matches = extract_sentences(item.text_content, query)
-               matching_sentences.extend(text_matches)
+               kwic_matches = get_kwic_context(item.text_content, query)
+               if kwic_matches:
+                   results.append({
+                       'type': 'Baburnoma',
+                       'title': item.title,
+                       'sentences': kwic_matches,
+                       'url': reverse('baburnoma'),
+                       'source': 'Baburnoma'
+                   })
 
-           if matching_sentences:
-               # Highlight the matches
-               highlighted_title = highlight_text(item.title, query)
-               highlighted_sentences = [highlight_text(sentence, query) for sentence in matching_sentences[1:]] if len(matching_sentences) > 1 else []
+       # Search in Dictionary
+       dictionary_results = Dictionary.objects.filter(
+           Q(word__icontains=query) |
+           Q(description__icontains=query)
+       )
+       for dict_item in dictionary_results:
+           kwic_matches = get_kwic_context(dict_item.description, query)
+           if kwic_matches:
                results.append({
-                   'type': 'Baburnoma',
-                   'title': highlighted_title,
-                   'sentences': highlighted_sentences,
-                   'url': reverse('baburnoma', args=[]),
-                   'source': 'Baburnoma'
+                   'type': 'Lug\'at',
+                   'title': dict_item.word,
+                   'sentences': kwic_matches,
+                   'url': reverse('dictionary_list') + f'?q={query}',
+                   'source': 'Lug\'at'
                })
+
+   # Implement pagination
+   paginator = Paginator(results, 30)  # Show 30 results per page
+   page_number = request.GET.get('page', 1)
+   try:
+       page_obj = paginator.page(page_number)
+   except:
+       page_obj = paginator.page(1)  # Default to first page on error
 
    context = {
        'query': query,
-       'results': results,
-       'count': len(results)
+       'results': page_obj,
+       'count': len(results),
+       'total_pages': paginator.num_pages,
+       'current_page': int(page_number)
    }
    return render(request, 'search_results.html', context)
 
@@ -221,3 +239,7 @@ def uzbek_order(word):
     uzbek_alphabet = 'a b d e f g h i j k l m n o p q r s t u v x y z oʻ gʻ sh ch ng'
     order_dict = {char: i for i, char in enumerate(uzbek_alphabet)}
     return [order_dict.get(c, len(uzbek_alphabet)) for c in word.lower()]
+
+
+
+
