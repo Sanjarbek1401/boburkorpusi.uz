@@ -25,7 +25,9 @@
             <tbody>
                 {% for word in words %}
                 <tr>
-                    <td class="word-cell">{{ word.word }}</td>
+                    <td class="word-cell">
+                        <span class="dictionary-word" data-definition="{{ word.description }}">{{ word.word }}</span>
+                    </td>
                     <td class="description-cell">{{ word.description }}</td>
                 </tr>
                 {% empty %}

@@ -163,6 +163,92 @@ body {
     line-height: 1.8;
 }
 
+/* Author Page Specific Styles */
+.author-page {
+    padding-top: 100px;
+    background: #f8f9fa;
+}
+
+.page-title {
+    font-size: 3rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 2rem;
+    border-bottom: 3px solid #FFA500;
+    padding-bottom: 1rem;
+}
+
+.author-intro {
+    max-width: 900px;
+    margin: 0 auto 3rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.main-intro {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    text-align: justify;
+}
+
+.biography-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.biography-section h2 {
+    color: #333;
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #FFA500;
+    padding-bottom: 0.5rem;
+}
+
+.biography-section h3 {
+    color: #444;
+    font-size: 1.5rem;
+    margin: 2rem 0 1rem;
+}
+
+.family-tree {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin: 2rem 0;
+    padding: 2rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.family-column h3 {
+    color: #FFA500;
+    margin-bottom: 1rem;
+}
+
+.family-column ul {
+    list-style: none;
+    padding: 0;
+}
+
+.family-column li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.author-biography {
+    margin-top: 2rem;
+}
+
+.author-biography p {
+    text-align: justify;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+
 /* Contact Page */
 .contact-content {
     display: grid;
@@ -224,6 +310,118 @@ footer {
     text-align: center;
 }
 
+/* Footer Styles */
+.footer {
+    background: #2c3e50;
+    color: #fff;
+    padding: 4rem 0 2rem;
+    margin-top: 4rem;
+}
+
+.footer-content {
+    margin-bottom: 2rem;
+}
+
+.footer-section {
+    margin-bottom: 2rem;
+}
+
+.footer-section h3 {
+    color: #FFA500;
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.footer-section h3:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 50px;
+    height: 2px;
+    background: #FFA500;
+}
+
+.footer-section p {
+    color: #ecf0f1;
+    line-height: 1.6;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-links a {
+    color: #ecf0f1;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-links a:hover {
+    color: #FFA500;
+}
+
+.footer-contact {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-contact li {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.footer-contact li i {
+    margin-right: 10px;
+    color: #FFA500;
+    width: 20px;
+}
+
+.social-links {
+    margin-top: 1.5rem;
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    margin-right: 10px;
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    background: #FFA500;
+    color: #fff;
+    transform: translateY(-3px);
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-bottom p {
+    margin: 0;
+    color: #bdc3c7;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .hero-content h1 {
@@ -247,5 +445,46 @@ footer {
     .author-image {
         flex: 0 0 100%;
         margin-bottom: 2rem;
+    }
+    
+    .family-tree {
+        grid-template-columns: 1fr;
+    }
+    
+    .family-column {
+        margin-bottom: 2rem;
+    }
+    
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .author-intro,
+    .biography-section {
+        padding: 1rem;
+    }
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+    .footer {
+        padding: 3rem 0 1rem;
+    }
+    
+    .footer-section {
+        text-align: center;
+    }
+    
+    .footer-section h3:after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    
+    .footer-contact li {
+        justify-content: center;
+    }
+    
+    .social-links {
+        text-align: center;
     }
 }

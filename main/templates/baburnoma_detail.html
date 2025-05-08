@@ -1,0 +1,346 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ entry.title }} - Boburnoma{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Baburnoma Detail Page Styles */
+    .baburnoma-detail {
+        padding: 40px 0;
+        background-color: #fff;
+    }
+    
+    .entry-header {
+        margin-bottom: 30px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 20px;
+    }
+    
+    .entry-title {
+        font-size: 2.2rem;
+        color: #333;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+    
+    .entry-metadata {
+        color: #777;
+        font-size: 14px;
+        margin-bottom: 10px;
+    }
+    
+    .entry-content {
+        line-height: 1.8;
+        font-size: 18px;
+        color: #444;
+        margin-bottom: 40px;
+    }
+    
+    /* Navigation between entries */
+    .entry-navigation {
+        display: flex;
+        justify-content: space-between;
+        padding-top: 30px;
+        border-top: 1px solid #eee;
+        margin-top: 40px;
+    }
+    
+    .nav-prev, .nav-next {
+        flex: 0 0 48%;
+    }
+    
+    .nav-next {
+        text-align: right;
+    }
+    
+    .entry-navigation a {
+        color: #0066cc;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    
+    .entry-navigation a:hover {
+        color: #004499;
+        text-decoration: underline;
+    }
+    
+    /* Tooltip styles */
+    .dictionary-word {
+        color: #0066cc;
+        text-decoration: underline dotted;
+        cursor: help;
+    }
+    
+    .word-tooltip {
+        position: absolute;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 8px 12px;
+        max-width: 300px;
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        font-size: 14px;
+        line-height: 1.4;
+        transition: opacity 0.2s;
+    }
+    
+    .word-tooltip:after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        margin-left: -10px;
+        border-width: 10px 10px 0;
+        border-style: solid;
+        border-color: #f8f9fa transparent;
+    }
+    
+    .word-tooltip.tooltip-below:after {
+        bottom: auto;
+        top: -10px;
+        border-width: 0 10px 10px;
+    }
+    
+    /* Responsive styles */
+    @media (max-width: 767px) {
+        .entry-title {
+            font-size: 1.8rem;
+        }
+        
+        .entry-content {
+            font-size: 16px;
+        }
+        
+        .dictionary-word {
+            border-bottom: 1px dotted #0066cc;
+            text-decoration: none;
+        }
+        
+        .word-tooltip {
+            max-width: 85vw;
+            font-size: 16px;
+            padding: 10px 15px;
+        }
+        
+        .entry-navigation {
+            flex-direction: column;
+        }
+        
+        .nav-prev, .nav-next {
+            flex: 0 0 100%;
+            margin-bottom: 15px;
+        }
+        
+        .nav-next {
+            text-align: left;
+        }
+    }
+    
+    /* Container */
+    .container {
+        width: 100%;
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+    }
+    
+    @media (min-width: 576px) {
+        .container {
+            max-width: 540px;
+        }
+    }
+    
+    @media (min-width: 768px) {
+        .container {
+            max-width: 720px;
+        }
+    }
+    
+    @media (min-width: 992px) {
+        .container {
+            max-width: 960px;
+        }
+    }
+    
+    @media (min-width: 1200px) {
+        .container {
+            max-width: 1140px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="baburnoma-detail">
+    <div class="container">
+        {% if error %}
+            <div class="alert alert-danger">
+                <p>{{ error }}</p>
+            </div>
+        {% else %}
+            <article class="entry">
+                <header class="entry-header">
+                    <h1 class="entry-title">{{ entry.title }}</h1>
+                    <div class="entry-metadata">
+                        <span>Yuklangan vaqt: {{ entry.uploaded_at|date:"d-M Y" }}</span>
+                    </div>
+                </header>
+                
+                <div class="entry-content baburnoma-text">
+                    {{ text|safe }}
+                </div>
+                
+                {% if prev_entry or next_entry %}
+                    <div class="entry-navigation">
+                        <div class="nav-prev">
+                            {% if prev_entry %}
+                                <a href="{% url 'baburnoma_detail' prev_entry.id %}">&larr; {{ prev_entry.title }}</a>
+                            {% endif %}
+                        </div>
+                        <div class="nav-next">
+                            {% if next_entry %}
+                                <a href="{% url 'baburnoma_detail' next_entry.id %}">{{ next_entry.title }} &rarr;</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+            </article>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Only initialize tooltip functionality if we're on the Baburnoma detail page
+        if (document.querySelector('.baburnoma-text')) {
+            // Cache for definitions to avoid repeated AJAX requests
+            const definitionCache = {};
+            
+            // Create tooltip element
+            const tooltip = document.createElement('div');
+            tooltip.className = 'word-tooltip';
+            tooltip.style.display = 'none';
+            document.body.appendChild(tooltip);
+            
+            // Add event listeners to all dictionary words
+            document.querySelectorAll('.dictionary-word').forEach(word => {
+                word.addEventListener('mouseenter', showTooltip);
+                word.addEventListener('mouseleave', hideTooltip);
+                
+                // For mobile support, add touch events
+                word.addEventListener('touchstart', handleTouch);
+            });
+            
+            // Handle touch events for mobile devices
+            function handleTouch(event) {
+                event.preventDefault();
+                
+                // If tooltip is already visible for this word, hide it (toggle behavior)
+                if (tooltip.style.display === 'block' && 
+                    event.target.dataset.word === tooltip.dataset.currentWord) {
+                    hideTooltip();
+                    return;
+                }
+                
+                // Otherwise show the tooltip
+                showTooltip(event);
+                
+                // Hide tooltip when touching elsewhere
+                const currentWord = event.target;
+                const touchEndHandler = function(e) {
+                    if (!currentWord.contains(e.target) && !tooltip.contains(e.target)) {
+                        hideTooltip();
+                        document.removeEventListener('touchstart', touchEndHandler);
+                    }
+                };
+                
+                document.addEventListener('touchstart', touchEndHandler);
+            }
+            
+            // Show tooltip with definition
+            function showTooltip(event) {
+                const word = event.target.dataset.word;
+                tooltip.dataset.currentWord = word;
+                
+                // Position tooltip near the word
+                positionTooltip(event);
+                
+                // If definition is already cached, show it immediately
+                if (definitionCache[word]) {
+                    tooltip.innerHTML = definitionCache[word];
+                    tooltip.style.display = 'block';
+                    return;
+                }
+                
+                // Otherwise, show loading state and fetch definition
+                tooltip.innerHTML = 'Yuklanyapti...';
+                tooltip.style.display = 'block';
+                
+                // Fetch definition via AJAX
+                fetch(`/get-word-definition/?word=${encodeURIComponent(word)}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Word not found');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Cache and display the definition
+                        const definitionHTML = `<strong>${data.word}</strong>: ${data.definition}`;
+                        definitionCache[word] = definitionHTML;
+                        
+                        // Only update if tooltip is still visible
+                        if (tooltip.style.display === 'block') {
+                            tooltip.innerHTML = definitionHTML;
+                        }
+                    })
+                    .catch(error => {
+                        tooltip.innerHTML = 'Izohi topilmadi.';
+                    });
+            }
+            
+            // Hide tooltip
+            function hideTooltip() {
+                tooltip.style.display = 'none';
+            }
+            
+            // Position tooltip near word
+            function positionTooltip(event) {
+                const rect = event.target.getBoundingClientRect();
+                const scrollTop = window.scrollY || document.documentElement.scrollTop;
+                
+                // Calculate position for tooltip (above the word)
+                let tooltipTop = rect.top - tooltip.offsetHeight + scrollTop - 10;
+                const tooltipLeft = rect.left + (rect.width / 2) - (tooltip.offsetWidth / 2);
+                
+                // Ensure tooltip stays within viewport
+                if (tooltipTop < scrollTop) {
+                    // If not enough space above, place it below the word
+                    tooltipTop = rect.bottom + scrollTop + 10;
+                    tooltip.classList.add('tooltip-below');
+                } else {
+                    tooltip.classList.remove('tooltip-below');
+                }
+                
+                tooltip.style.top = tooltipTop + 'px';
+                tooltip.style.left = tooltipLeft + 'px';
+                
+                // Ensure tooltip doesn't go off-screen horizontally
+                const rightEdge = tooltipLeft + tooltip.offsetWidth;
+                const viewportWidth = window.innerWidth;
+                
+                if (rightEdge > viewportWidth) {
+                    tooltip.style.left = (viewportWidth - tooltip.offsetWidth - 10) + 'px';
+                } else if (tooltipLeft < 0) {
+                    tooltip.style.left = '10px';
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
